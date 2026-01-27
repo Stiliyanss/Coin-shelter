@@ -1,40 +1,40 @@
 import { useState } from 'react'
 import CoinDetails from './CoinDetails'
 
-function Catalog({ coins, onAddCoin }) {
+function Catalog({ coins, onAddCoin, onEditCoin, onDeleteCoin }) {
+  
   const [selectedCoin, setSelectedCoin] = useState(null)
-  const getMaterialColor = (material) => {
-    switch (material.toLowerCase()) {
-      case 'gold':
-        return 'from-amber-400 to-yellow-600'
-      case 'silver':
-        return 'from-slate-300 to-slate-500'
-      case 'platinum':
-        return 'from-gray-300 to-gray-500'
-      case 'copper':
-        return 'from-orange-600 to-red-700'
-      default:
-        return 'from-white/20 to-white/40'
-    }
+ const getMaterialColor = (material) => {
+  const m = (material ?? '').toString().toLowerCase()
+  switch (m) {
+    case 'gold': return 'from-amber-400 to-yellow-600'
+    case 'silver': return 'from-slate-300 to-slate-500'
+    case 'platinum': return 'from-gray-300 to-gray-500'
+    case 'copper': return 'from-orange-600 to-red-700'
+    default: return 'from-white/20 to-white/40'
   }
+}
 
-  const getMaterialGlow = (material) => {
-    switch (material.toLowerCase()) {
-      case 'gold':
-        return 'shadow-amber-500/50'
-      case 'silver':
-        return 'shadow-slate-400/50'
-      case 'platinum':
-        return 'shadow-gray-400/50'
-      case 'copper':
-        return 'shadow-orange-500/50'
-      default:
-        return 'shadow-white/20'
-    }
+const getMaterialGlow = (material) => {
+  const m = (material ?? '').toString().toLowerCase()
+  switch (m) {
+    case 'gold': return 'shadow-amber-500/50'
+    case 'silver': return 'shadow-slate-400/50'
+    case 'platinum': return 'shadow-gray-400/50'
+    case 'copper': return 'shadow-orange-500/50'
+    default: return 'shadow-white/20'
   }
+}
 
   if (selectedCoin) {
-    return <CoinDetails coin={selectedCoin} onBack={() => setSelectedCoin(null)} />
+    return (
+      <CoinDetails 
+        coin={selectedCoin} 
+        onBack={() => setSelectedCoin(null)}
+        onEdit={onEditCoin}
+        onDelete={onDeleteCoin}
+      />
+    )
   }
 
   return (
@@ -130,7 +130,7 @@ function Catalog({ coins, onAddCoin }) {
                           {coin.material}
                         </span>
                         <span className="text-lg font-light text-white/90">
-                          ${parseFloat(coin.price).toFixed(2)}
+                          €{parseFloat(coin.price || 0).toFixed(2)}
                         </span>
                       </div>
 
@@ -140,12 +140,30 @@ function Catalog({ coins, onAddCoin }) {
                         </p>
                       )}
 
-                      <div className="pt-3 border-t border-white/5">
+                      <div className="pt-3 border-t border-white/5 flex gap-2">
                         <button 
                           onClick={() => setSelectedCoin(coin)}
-                          className="w-full text-xs font-light tracking-widest uppercase text-white/50 hover:text-white/70 transition-colors"
+                          className="flex-1 text-xs font-light tracking-widest uppercase text-white/50 hover:text-white/70 transition-colors"
                         >
                           View Details
+                        </button>
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            onEditCoin(coin)
+                          }}
+                          className="px-3 py-1 text-xs font-light tracking-widest uppercase text-amber-400/70 hover:text-amber-400 border border-amber-400/30 hover:border-amber-400/50 rounded transition-colors"
+                        >
+                          Edit
+                        </button>
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            onDeleteCoin(coin.id)
+                          }}
+                          className="px-3 py-1 text-xs font-light tracking-widest uppercase text-red-400/70 hover:text-red-400 border border-red-400/30 hover:border-red-400/50 rounded transition-colors"
+                        >
+                          Delete
                         </button>
                       </div>
                     </div>

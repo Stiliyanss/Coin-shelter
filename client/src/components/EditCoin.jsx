@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
-function AddCoin({ onAddCoin, onCancel }) {
+function EditCoin({ coin, onUpdateCoin, onCancel }) {
   const [formData, setFormData] = useState({
     name: '',
     image: '',
@@ -16,33 +16,39 @@ function AddCoin({ onAddCoin, onCancel }) {
     pieces: ''
   })
 
+  useEffect(() => {
+    if (coin) {
+      setFormData({
+        name: coin.name || '',
+        image: coin.image || '',
+        material: coin.material || '',
+        price: coin.price || '',
+        description: coin.description || '',
+        mint: coin.mint || '',
+        country: coin.country || '',
+        year: coin.year || '',
+        weight: coin.weight || '',
+        diameter: coin.diameter || '',
+        certificate: coin.certificate || false,
+        pieces: coin.pieces || ''
+      })
+    }
+  }, [coin])
+
   const handleSubmit = (e) => {
     e.preventDefault()
     if (formData.name && formData.material && formData.price) {
-      onAddCoin({
+     onUpdateCoin({
   ...formData,
   price: formData.price === '' ? null : Number(formData.price),
   year: formData.year === '' ? null : Number(formData.year),
   weight: formData.weight === '' ? null : Number(formData.weight),
   diameter: formData.diameter === '' ? null : Number(formData.diameter),
   pieces: formData.pieces === '' ? null : Number(formData.pieces),
-  certificate: formData.certificate
+  certificate: !!formData.certificate,
+  id: coin?.id
 })
-      // Reset form
-      setFormData({
-        name: '',
-        image: '',
-        material: '',
-        price: '',
-        description: '',
-        mint: '',
-        country: '',
-        year: '',
-        weight: '',
-        diameter: '',
-        certificate: false,
-        pieces: ''
-      })
+
     }
   }
 
@@ -60,7 +66,7 @@ function AddCoin({ onAddCoin, onCancel }) {
         <div className="p-8">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-light tracking-wide text-white/90">
-              Add New Coin
+              Edit Coin
             </h2>
             <button
               onClick={onCancel}
@@ -295,7 +301,7 @@ function AddCoin({ onAddCoin, onCancel }) {
                 className="flex-1 px-6 py-3 border border-amber-400/50 bg-amber-400/10 hover:bg-amber-400/20 hover:border-amber-400/70 transition-all duration-300 rounded-lg"
               >
                 <span className="text-sm font-light tracking-widest uppercase text-white/90">
-                  Add Coin
+                  Update Coin
                 </span>
               </button>
             </div>
@@ -306,4 +312,4 @@ function AddCoin({ onAddCoin, onCancel }) {
   )
 }
 
-export default AddCoin
+export default EditCoin

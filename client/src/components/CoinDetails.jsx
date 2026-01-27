@@ -1,33 +1,25 @@
-function CoinDetails({ coin, onBack }) {
+function CoinDetails({ coin, onBack, onEdit, onDelete }) {
   const getMaterialColor = (material) => {
-    switch (material.toLowerCase()) {
-      case 'gold':
-        return 'from-amber-400 to-yellow-600'
-      case 'silver':
-        return 'from-slate-300 to-slate-500'
-      case 'platinum':
-        return 'from-gray-300 to-gray-500'
-      case 'copper':
-        return 'from-orange-600 to-red-700'
-      default:
-        return 'from-white/20 to-white/40'
-    }
+  const m = (material ?? '').toString().toLowerCase()
+  switch (m) {
+    case 'gold': return 'from-amber-400 to-yellow-600'
+    case 'silver': return 'from-slate-300 to-slate-500'
+    case 'platinum': return 'from-gray-300 to-gray-500'
+    case 'copper': return 'from-orange-600 to-red-700'
+    default: return 'from-white/20 to-white/40'
   }
+}
 
-  const getMaterialGlow = (material) => {
-    switch (material.toLowerCase()) {
-      case 'gold':
-        return 'shadow-amber-500/50'
-      case 'silver':
-        return 'shadow-slate-400/50'
-      case 'platinum':
-        return 'shadow-gray-400/50'
-      case 'copper':
-        return 'shadow-orange-500/50'
-      default:
-        return 'shadow-white/20'
-    }
+const getMaterialGlow = (material) => {
+  const m = (material ?? '').toString().toLowerCase()
+  switch (m) {
+    case 'gold': return 'shadow-amber-500/50'
+    case 'silver': return 'shadow-slate-400/50'
+    case 'platinum': return 'shadow-gray-400/50'
+    case 'copper': return 'shadow-orange-500/50'
+    default: return 'shadow-white/20'
   }
+}
 
   const getMaterialBorderColor = (material) => {
     switch (material.toLowerCase()) {
@@ -205,6 +197,34 @@ function CoinDetails({ coin, onBack }) {
                 </p>
               </div>
             </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="pt-8 border-t border-white/10 flex gap-4">
+            <button
+              onClick={() => {
+                onEdit(coin)
+                onBack()
+              }}
+              className="flex-1 px-6 py-3 border border-amber-400/50 bg-amber-400/10 hover:bg-amber-400/20 hover:border-amber-400/70 transition-all duration-300 rounded-lg"
+            >
+              <span className="text-sm font-light tracking-widest uppercase text-white/90">
+                Edit Coin
+              </span>
+            </button>
+            <button
+              onClick={() => {
+                if (window.confirm('Are you sure you want to delete this coin?')) {
+                  onDelete(coin.id)
+                  onBack()
+                }
+              }}
+              className="flex-1 px-6 py-3 border border-red-400/50 bg-red-400/10 hover:bg-red-400/20 hover:border-red-400/70 transition-all duration-300 rounded-lg"
+            >
+              <span className="text-sm font-light tracking-widest uppercase text-white/90">
+                Delete Coin
+              </span>
+            </button>
           </div>
         </div>
       </div>
