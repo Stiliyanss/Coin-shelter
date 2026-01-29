@@ -5,18 +5,28 @@ function Catalog({ coins, onAddCoin, onEditCoin, onDeleteCoin }) {
   
   const [selectedCoin, setSelectedCoin] = useState(null)
   const [sortOrder, setSortOrder] = useState('none')
+  const [materialFilter, setMaterialFilter] = useState('all');
 
-    const sortedCoins = useMemo(() => {
-    const list = [...coins]
+    const visibleCoins = useMemo(() => {
+  // 1) filter
+  let list = [...coins]
+  if (materialFilter !== 'all') {
+    list = list.filter((c) => {
+      const m = (c.material ?? '').toString().toLowerCase()
+      return m === materialFilter
+    })
+  }
 
-    if (sortOrder === 'price_asc') {
-      list.sort((a, b) => (Number(a.price ?? 0) - Number(b.price ?? 0)))
-    } else if (sortOrder === 'price_desc') {
-      list.sort((a, b) => (Number(b.price ?? 0) - Number(a.price ?? 0)))
-    }
+  // 2) sort
+  if (sortOrder === 'price_asc') {
+    list.sort((a, b) => Number(a.price ?? 0) - Number(b.price ?? 0))
+  } else if (sortOrder === 'price_desc') {
+    list.sort((a, b) => Number(b.price ?? 0) - Number(a.price ?? 0))
+  }
 
-    return list
-  }, [coins, sortOrder])
+  return list
+}, [coins, sortOrder, materialFilter])
+
 
 
  const getMaterialColor = (material) => {
@@ -93,29 +103,65 @@ const getMaterialGlow = (material) => {
       Your Collection
     </h2>
     <p className="text-sm text-white/40 font-light">
-      {coins.length} {coins.length === 1 ? 'coin' : 'coins'} in your collection
-    </p>
+  Showing {visibleCoins.length} of {coins.length} {coins.length === 1 ? 'coin' : 'coins'}
+</p>
+
   </div>
 
-  <div className="flex flex-col items-end">
-    <label className="block text-xs font-light tracking-widest uppercase text-white/40 mb-2">
-      Sort by
-    </label>
-    <select
-      value={sortOrder}
-      onChange={(e) => setSortOrder(e.target.value)}
-      className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white/80 focus:outline-none focus:border-amber-400/50 focus:bg-white/10 transition-all duration-300"
-    >
-      <option value="none" className="bg-black">Default</option>
-      <option value="price_asc" className="bg-black">Price: Low → High</option>
-      <option value="price_desc" className="bg-black">Price: High → Low</option>
-    </select>
+  <div className="flex flex-col items-end gap-3">
+  <div className="flex gap-3">
+    <div className="flex flex-col">
+      <label className="block text-xs font-light tracking-widest uppercase text-white/40 mb-2">
+        Material
+      </label>
+      <select
+        value={materialFilter}
+        onChange={(e) => setMaterialFilter(e.target.value)}
+        className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white/80 focus:outline-none focus:border-amber-400/50 focus:bg-white/10 transition-all duration-300"
+      >
+        <option value="all" className="bg-black">All</option>
+        <option value="gold" className="bg-black">Gold</option>
+        <option value="silver" className="bg-black">Silver</option>
+        <option value="platinum" className="bg-black">Platinum</option>
+        <option value="copper" className="bg-black">Copper</option>
+        <option value="other" className="bg-black">Other</option>
+      </select>
+    </div>
+
+    <div className="flex flex-col">
+      <label className="block text-xs font-light tracking-widest uppercase text-white/40 mb-2">
+        Sort by
+      </label>
+      <select
+        value={sortOrder}
+        onChange={(e) => setSortOrder(e.target.value)}
+        className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white/80 focus:outline-none focus:border-amber-400/50 focus:bg-white/10 transition-all duration-300"
+      >
+        <option value="none" className="bg-black">Default</option>
+        <option value="price_asc" className="bg-black">Price: Low → High</option>
+        <option value="price_desc" className="bg-black">Price: High → Low</option>
+      </select>
+    </div>
   </div>
+
+  {(materialFilter !== 'all' || sortOrder !== 'none') && (
+    <button
+      onClick={() => {
+        setMaterialFilter('all')
+        setSortOrder('none')
+      }}
+      className="text-xs font-light tracking-widest uppercase text-white/40 hover:text-white/70 transition-colors"
+    >
+      Clear filters
+    </button>
+  )}
+</div>
+
 </div>
 
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {sortedCoins.map((coin) => (
+                {visibleCoins.map((coin) => (
                   <div
                     key={coin.id}
                     className="group relative bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:border-amber-400/30 transition-all duration-300 backdrop-blur-sm"
