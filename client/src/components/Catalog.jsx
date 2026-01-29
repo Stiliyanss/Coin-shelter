@@ -1,9 +1,24 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import CoinDetails from './CoinDetails'
 
 function Catalog({ coins, onAddCoin, onEditCoin, onDeleteCoin }) {
   
   const [selectedCoin, setSelectedCoin] = useState(null)
+  const [sortOrder, setSortOrder] = useState('none')
+
+    const sortedCoins = useMemo(() => {
+    const list = [...coins]
+
+    if (sortOrder === 'price_asc') {
+      list.sort((a, b) => (Number(a.price ?? 0) - Number(b.price ?? 0)))
+    } else if (sortOrder === 'price_desc') {
+      list.sort((a, b) => (Number(b.price ?? 0) - Number(a.price ?? 0)))
+    }
+
+    return list
+  }, [coins, sortOrder])
+
+
  const getMaterialColor = (material) => {
   const m = (material ?? '').toString().toLowerCase()
   switch (m) {
@@ -36,6 +51,8 @@ const getMaterialGlow = (material) => {
       />
     )
   }
+
+  
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
@@ -70,17 +87,35 @@ const getMaterialGlow = (material) => {
             </div>
           ) : (
             <>
-              <div className="mb-8">
-                <h2 className="text-xl font-light tracking-wide text-white/70 mb-2">
-                  Your Collection
-                </h2>
-                <p className="text-sm text-white/40 font-light">
-                  {coins.length} {coins.length === 1 ? 'coin' : 'coins'} in your collection
-                </p>
-              </div>
+              <div className="mb-8 flex items-end justify-between gap-6">
+  <div>
+    <h2 className="text-xl font-light tracking-wide text-white/70 mb-2">
+      Your Collection
+    </h2>
+    <p className="text-sm text-white/40 font-light">
+      {coins.length} {coins.length === 1 ? 'coin' : 'coins'} in your collection
+    </p>
+  </div>
+
+  <div className="flex flex-col items-end">
+    <label className="block text-xs font-light tracking-widest uppercase text-white/40 mb-2">
+      Sort by
+    </label>
+    <select
+      value={sortOrder}
+      onChange={(e) => setSortOrder(e.target.value)}
+      className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white/80 focus:outline-none focus:border-amber-400/50 focus:bg-white/10 transition-all duration-300"
+    >
+      <option value="none" className="bg-black">Default</option>
+      <option value="price_asc" className="bg-black">Price: Low → High</option>
+      <option value="price_desc" className="bg-black">Price: High → Low</option>
+    </select>
+  </div>
+</div>
+
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {coins.map((coin) => (
+                {sortedCoins.map((coin) => (
                   <div
                     key={coin.id}
                     className="group relative bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:border-amber-400/30 transition-all duration-300 backdrop-blur-sm"
