@@ -230,8 +230,13 @@ function App() {
                   Catalog
                 </button>
                 <button
-                  onClick={() => setShowAddForm(true)}
-                  className="px-6 py-2 border border-amber-400/50 bg-amber-400/10 hover:bg-amber-400/20 hover:border-amber-400/70 transition-all duration-300 rounded-lg"
+                   onClick={() => isAuthenticated && setShowAddForm(true)}
+  disabled={!isAuthenticated}
+  className={`px-6 py-2 border rounded-lg transition-all duration-300
+    ${isAuthenticated
+      ? 'border-amber-400/50 bg-amber-400/10 hover:bg-amber-400/20 hover:border-amber-400/70'
+      : 'border-white/10 bg-white/5 opacity-40 cursor-not-allowed'
+    }`}
                 >
                   <span className="text-xs font-light tracking-widest uppercase text-white/90">
                     + Add Coin
@@ -284,8 +289,13 @@ function App() {
 
                 <div className="flex gap-4">
                   <button
-                    onClick={() => setShowAddForm(true)}
-                    className="group relative px-8 py-3 border border-white/10 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 hover:border-amber-400/50"
+                  onClick={() => isAuthenticated && setShowAddForm(true)}
+  disabled={!isAuthenticated}
+  className={`group relative px-8 py-3 border backdrop-blur-sm transition-all duration-300
+    ${isAuthenticated
+      ? 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-amber-400/50'
+      : 'border-white/10 bg-white/5 opacity-40 cursor-not-allowed'
+    }`}
                   >
                     <span className="text-sm font-light tracking-widest uppercase text-white/70 group-hover:text-white transition-colors">
                       Add Coin
