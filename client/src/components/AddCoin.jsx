@@ -6,6 +6,7 @@ function AddCoin({ onAddCoin, onCancel }) {
     image: '',
     material: '',
     price: '',
+    purchased_at: '',
     description: '',
     mint: '',
     country: '',
@@ -13,7 +14,8 @@ function AddCoin({ onAddCoin, onCancel }) {
     weight: '',
     diameter: '',
     certificate: false,
-    pieces: ''
+    pieces: '',
+    
   })
 
   const handleSubmit = (e) => {
@@ -22,6 +24,7 @@ function AddCoin({ onAddCoin, onCancel }) {
       onAddCoin({
   ...formData,
   price: formData.price === '' ? null : Number(formData.price),
+  purchased_at: formData.purchased_at || null,
   year: formData.year === '' ? null : Number(formData.year),
   weight: formData.weight === '' ? null : Number(formData.weight),
   diameter: formData.diameter === '' ? null : Number(formData.diameter),
@@ -152,6 +155,21 @@ function AddCoin({ onAddCoin, onCancel }) {
                 placeholder="0.00"
               />
             </div>
+
+            {/* Purchase date */}
+            <div>
+  <label className="block text-xs font-light tracking-widest uppercase text-white/50 mb-2">
+    Purchase date
+  </label>
+  <input
+    type="date"
+    name="purchased_at"
+    value={formData.purchased_at}
+    onChange={handleChange}
+    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-amber-400/50 focus:bg-white/10 transition-all duration-300"
+  />
+</div>
+
 
             {/* Mint and Country - Side by side */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
