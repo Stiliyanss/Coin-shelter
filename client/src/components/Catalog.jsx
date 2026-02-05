@@ -86,7 +86,7 @@ const getMaterialGlow = (material) => {
   
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       {coins.length === 0 ? (
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
           <div className="mb-12 relative">
@@ -121,7 +121,7 @@ const getMaterialGlow = (material) => {
         </div>
       ) : (
         <>
-          <div className="mb-8 flex items-end justify-between gap-6">
+          <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <h2 className="text-xl font-light tracking-wide text-white/70 mb-2">
                 Your Collection
@@ -131,18 +131,18 @@ const getMaterialGlow = (material) => {
                 {coins.length === 1 ? "coin" : "coins"}
               </p>
 
-              <div className="px-5 py-3 border border-white/10 bg-white/5 rounded-xl backdrop-blur-sm">
-                <div className="text-xs font-light tracking-widest uppercase text-white/40 mb-1">
-                  Total value
-                </div>
-                <div className="text-2xl font-light text-white/85 tracking-wide">
-                  {formatEUR(totalValue)}
-                </div>
-              </div>
+             <div className="mt-4 sm:mt-3 inline-block px-5 py-3 border border-white/10 bg-white/5 rounded-xl backdrop-blur-sm">
+  <div className="text-xs font-light tracking-widest uppercase text-white/40 mb-1">
+    Total value
+  </div>
+  <div className="text-xl sm:text-2xl font-light text-white/85 tracking-wide">
+    {formatEUR(totalValue)}
+  </div>
+</div>
             </div>
 
-            <div className="flex flex-col items-end gap-3">
-              <div className="flex gap-3">
+            <div className="flex flex-col gap-3 lg:items-end">
+  <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
                 <div className="flex flex-col">
                   <label className="block text-xs font-light tracking-widest uppercase text-white/40 mb-2">
                     Material
@@ -150,7 +150,7 @@ const getMaterialGlow = (material) => {
                   <select
                     value={materialFilter}
                     onChange={(e) => setMaterialFilter(e.target.value)}
-                    className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white/80 focus:outline-none focus:border-amber-400/50 focus:bg-white/10 transition-all duration-300"
+                    className="w-full sm:w-auto px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white/80 focus:outline-none focus:border-amber-400/50 focus:bg-white/10 transition-all duration-300"
                   >
                     <option value="all" className="bg-black">
                       All
@@ -180,7 +180,7 @@ const getMaterialGlow = (material) => {
                   <select
                     value={sortOrder}
                     onChange={(e) => setSortOrder(e.target.value)}
-                    className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white/80 focus:outline-none focus:border-amber-400/50 focus:bg-white/10 transition-all duration-300"
+                    className="w-full sm:w-auto px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white/80 focus:outline-none focus:border-amber-400/50 focus:bg-white/10 transition-all duration-300"
                   >
                     <option value="none" className="bg-black">
                       Default
@@ -216,7 +216,10 @@ const getMaterialGlow = (material) => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {visibleCoins.map((coin) => (
+            {visibleCoins.map((coin) => {
+              const mat = (coin.material ?? '').toString().toLowerCase()
+
+              return(
               <div
                 key={coin.id}
                 className="group relative bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:border-amber-400/30 transition-all duration-300 backdrop-blur-sm"
@@ -253,20 +256,21 @@ const getMaterialGlow = (material) => {
                   </h3>
 
                   <div className="flex items-center justify-between mb-3">
+                    
                     <span
                       className={`text-xs px-3 py-1 rounded-full bg-gradient-to-r ${getMaterialColor(coin.material)}/20 text-white/70 font-light tracking-wide border`}
                       style={{
-                        borderColor:
-                          coin.material.toLowerCase() === "gold"
-                            ? "rgba(251, 191, 36, 0.3)"
-                            : coin.material.toLowerCase() === "silver"
-                              ? "rgba(148, 163, 184, 0.3)"
-                              : coin.material.toLowerCase() === "platinum"
-                                ? "rgba(156, 163, 175, 0.3)"
-                                : coin.material.toLowerCase() === "copper"
-                                  ? "rgba(234, 88, 12, 0.3)"
-                                  : "rgba(255, 255, 255, 0.1)",
-                      }}
+  borderColor:
+    mat === "gold"
+      ? "rgba(251, 191, 36, 0.3)"
+      : mat === "silver"
+        ? "rgba(148, 163, 184, 0.3)"
+        : mat === "platinum"
+          ? "rgba(156, 163, 175, 0.3)"
+          : mat === "copper"
+            ? "rgba(234, 88, 12, 0.3)"
+            : "rgba(255, 255, 255, 0.1)",
+}}
                     >
                       {coin.material}
                     </span>
@@ -316,7 +320,7 @@ const getMaterialGlow = (material) => {
                   </div>
                 </div>
               </div>
-            ))}
+            )})}
           </div>
         </>
       )}
